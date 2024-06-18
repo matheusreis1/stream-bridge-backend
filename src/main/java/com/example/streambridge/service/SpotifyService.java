@@ -8,18 +8,12 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
-public class SpotifyService {
-    @Autowired
-    private RestTemplate restTemplate;
-
-    private static final String API_URL = "http://localhost:3001/spotify";
-
+public class SpotifyService extends BaseService {
     public User getUser(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
