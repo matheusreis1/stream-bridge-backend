@@ -6,7 +6,12 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class DeezerService extends BaseService {
+
+    public DeezerService() {
+        super("https://api.deezer.com");
+    }
+
     public Object getPlaylistTracks(String playlistId) {
-        return restTemplate.getForObject(API_URL + "/playlist/" + playlistId + "/tracks", Object.class);
+        return restTemplate.getForObject(apiUrl + "/playlist/" + playlistId + "/tracks", Object.class);
     }
 }

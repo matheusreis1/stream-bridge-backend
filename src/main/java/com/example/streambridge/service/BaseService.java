@@ -10,5 +10,10 @@ public abstract class BaseService {
     @Autowired
     protected RestTemplate restTemplate;
 
-    protected static final String API_URL = "http://localhost:3001";
+    protected String apiUrl;
+
+
+    public BaseService(String apiUrl) {
+        this.apiUrl = apiUrl;
+    }
 }

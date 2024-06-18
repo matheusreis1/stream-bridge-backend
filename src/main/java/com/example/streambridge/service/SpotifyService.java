@@ -1,12 +1,10 @@
 package com.example.streambridge.service;
 
 import com.example.streambridge.entity.spotify.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -14,19 +12,24 @@ import java.util.stream.Collectors;
 
 @Service
 public class SpotifyService extends BaseService {
+
+    public SpotifyService() {
+        super("https://api.spotify.com");
+    }
+
     public User getUser(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity<String> request = new HttpEntity<>(null, headers);
 
-        return restTemplate.getForObject(API_URL + "/me", User.class, request);
+        return restTemplate.getForObject(apiUrl + "/me", User.class, request);
     }
 
     public List<Track> getTracks(List<String> tracksNames) {
         List<CompletableFuture<Track>> futures = tracksNames.stream()
                 .map(trackName -> CompletableFuture.supplyAsync(() ->
                 {
-                    SearchResponse searchResponse = restTemplate.getForObject(API_URL + "/search?q=" + trackName, SearchResponse.class);
+                    SearchResponse searchResponse = restTemplate.getForObject(apiUrl + "/search?q=" + trackName, SearchResponse.class);
                     assert searchResponse != null;
                     TrackList tracksResponse = searchResponse.getTracks().get(0);
                     return tracksResponse.getItems().get(0);
@@ -44,7 +47,7 @@ public class SpotifyService extends BaseService {
 
         HttpEntity<String> request = new HttpEntity<>(name, headers);
 
-        return restTemplate.postForObject(API_URL + "/users/" + userId + "/playlists", request, Playlist.class);
+        return restTemplate.postForObject(apiUrl + "/users/" + userId + "/playlists", request, Playlist.class);
     }
 
     public void addTracksToPlaylist(List<String> uris, String playlistId) {
@@ -53,6 +56,6 @@ public class SpotifyService extends BaseService {
 
         HttpEntity<List<String>> request = new HttpEntity<>(uris, headers);
 
-        restTemplate.postForObject(API_URL + "/playlists/" + playlistId + "/tracks", request, Object.class);
+        restTemplate.postForObject(apiUrl + "/playlists/" + playlistId + "/tracks", request, Object.class);
     }
 }
